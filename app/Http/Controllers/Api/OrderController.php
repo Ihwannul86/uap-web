@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -25,7 +26,7 @@ class OrderController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $orders
+                'data' => OrderResource::collection($orders)
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -106,7 +107,7 @@ class OrderController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Order created successfully',
-                'data' => $order->load('orderItems.product')
+                'data' => new OrderResource($order->load('orderItems.product'))
             ], 201);
 
         } catch (\Exception $e) {
@@ -134,7 +135,7 @@ class OrderController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $order
+                'data' => new OrderResource($order)
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -175,7 +176,7 @@ class OrderController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Order updated successfully',
-                'data' => $order->load('orderItems.product')
+                'data' => new OrderResource($order->load('orderItems.product'))
             ]);
         } catch (\Exception $e) {
             return response()->json([

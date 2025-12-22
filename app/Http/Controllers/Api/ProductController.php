@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +19,13 @@ class ProductController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $products
+            'data' => ProductResource::collection($products),
+            'meta' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ]
         ]);
     }
 
@@ -49,7 +56,7 @@ class ProductController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Product created successfully',
-            'data' => $product
+            'data' => new ProductResource($product)
         ], 201);
     }
 
@@ -60,7 +67,7 @@ class ProductController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => $product
+            'data' => new ProductResource($product)
         ]);
     }
 
@@ -91,7 +98,7 @@ class ProductController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Product updated successfully',
-            'data' => $product
+            'data' => new ProductResource($product)
         ]);
     }
 
